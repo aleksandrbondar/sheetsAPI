@@ -1,0 +1,27 @@
+body {
+  font-family: Arial, sans-serif;
+}
+
+.section {
+  margin-bottom: 20px;
+}
+
+.section h2 {
+  margin-bottom: 10px;
+}
+
+.section form {
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+}
+
+.section form input,
+.section form button {
+  margin-bottom: 10px;
+  padding: 10px;
+}
+
+.results {
+  margin-top: 10px;
+}

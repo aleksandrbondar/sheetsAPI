@@ -2,136 +2,40 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Google Sheets API Example</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-
-        .section {
-            margin-bottom: 20px;
-        }
-
-        .section h2 {
-            margin-bottom: 10px;
-        }
-
-        .section form {
-            display: flex;
-            flex-direction: column;
-            width: 300px;
-        }
-
-        .section form input,
-        .section form button {
-            margin-bottom: 10px;
-            padding: 10px;
-        }
-
-        .results {
-            margin-top: 10px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <title>Google Sheets API Example</title>
 </head>
 
 <body>
-    <div class="section">
-        <h2>Отправка данных</h2>
-        <form id="sendForm">
-            <input type="text" id="sendId" placeholder="ID" required>
-            <input type="text" id="sendUser" placeholder="User" required>
-            <input type="text" id="sendQuestion" placeholder="Question" required>
-            <input type="text" id="sendAnswer" placeholder="Answer" required>
-            <button type="submit">Отправить</button>
-        </form>
-        <div class="results" id="sendResults"></div>
-    </div>
-    <div class="section">
-        <h2>Получение данных по ID или User</h2>
-        <form id="getForm">
-            <input type="text" id="getId" placeholder="ID">
-            <input type="text" id="getUser" placeholder="User">
-            <button type="submit">Получить</button>
-        </form>
-        <div class="results" id="getResults"></div>
-    </div>
-    <div class="section">
-        <h2>Получение всех данных</h2>
-        <button id="getAllBtn">Получить все данные</button>
-        <div class="results" id="getAllResults"></div>
-    </div>
+  <div class="section">
+    <h2>Отправка данных</h2>
+    <form id="sendForm">
+      <input type="text" id="sendId" placeholder="ID" required>
+      <input type="text" id="sendUser" placeholder="User" required>
+      <input type="text" id="sendQuestion" placeholder="Question" required>
+      <input type="text" id="sendAnswer" placeholder="Answer" required>
+      <button type="submit">Отправить</button>
+    </form>
+    <div class="results" id="sendResults"></div>
+  </div>
+  <div class="section">
+    <h2>Получение данных по ID или User</h2>
+    <form id="getForm">
+      <input type="text" id="getId" placeholder="ID">
+      <input type="text" id="getUser" placeholder="User">
+      <button type="submit">Получить</button>
+    </form>
+    <div class="results" id="getResults"></div>
+  </div>
+  <div class="section">
+    <h2>Получение всех данных</h2>
+    <button id="getAllBtn">Получить все данные</button>
+    <div class="results" id="getAllResults"></div>
+  </div>
 
-    <script>
-        const apiUrl = 'https://script.google.com/macros/s/AKfycbxeaQQhfsoEE_gEIb9KZJQtwJOJlnNrBmO_FkXPmiD38EGEWFOZw5RcJ5z5QRTnkT3uiw/exec';
-
-        document.getElementById('sendForm').addEventListener('submit', async function (event) {
-            event.preventDefault();
-            const params = {
-                id: document.getElementById('sendId').value,
-                user: document.getElementById('sendUser').value,
-                question: document.getElementById('sendQuestion').value,
-                answer: document.getElementById('sendAnswer').value
-            };
-            try {
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(params)
-                });
-                const result = await response.json();
-                document.getElementById('sendResults').innerText = JSON.stringify(result);
-            } catch (error) {
-                console.error('Error:', error);
-                document.getElementById('sendResults').innerText = 'Ошибка отправки данных';
-            }
-        });
-
-        document.getElementById('getForm').addEventListener('submit', async function (event) {
-            event.preventDefault();
-            const params = {};
-            const id = document.getElementById('getId').value;
-            const user = document.getElementById('getUser').value;
-
-            if (id) {
-                params.id = id;
-            } else if (user) {
-                params.user = user;
-            }
-
-            if (!params.id && !params.user) {
-                document.getElementById('getResults').innerText = 'Пожалуйста, введите ID или User';
-                return;
-            }
-
-            try {
-                const response = await fetch(`${apiUrl}?${new URLSearchParams(params)}`, {
-                    method: 'GET'
-                });
-                const result = await response.json();
-                document.getElementById('getResults').innerText = JSON.stringify(result);
-            } catch (error) {
-                console.error('Error:', error);
-                document.getElementById('getResults').innerText = 'Ошибка получения данных';
-            }
-        });
-
-        document.getElementById('getAllBtn').addEventListener('click', async function () {
-            try {
-                const response = await fetch(apiUrl, {
-                    method: 'GET'
-                });
-                const result = await response.json();
-                document.getElementById('getAllResults').innerText = JSON.stringify(result);
-            } catch (error) {
-                console.error('Error:', error);
-                document.getElementById('getAllResults').innerText = 'Ошибка получения данных';
-            }
-        });
-    </script>
+  <script src="main.js"></script>
 </body>
 
 </html>

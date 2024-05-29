@@ -1,108 +1,67 @@
-const url = 'https://script.google.com/macros/s/AKfycbxeaQQhfsoEE_gEIb9KZJQtwJOJlnNrBmO_FkXPmiD38EGEWFOZw5RcJ5z5QRTnkT3uiw/exec'
+const apiUrl = 'https://script.google.com/macros/s/AKfycbxeaQQhfsoEE_gEIb9KZJQtwJOJlnNrBmO_FkXPmiD38EGEWFOZw5RcJ5z5QRTnkT3uiw/exec';
 
-const answer = document.querySelector('.answer')
-const answerBtn = document.querySelector('#answer')
-
-
-async function sendPostRequest(data) {
-
-    try {
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: new URLSearchParams(data)
-        });
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const result = await response.json();
-        console.log('Response:', result);
-    } catch (error) {
-        console.error('Error:', error);
-    }
-}
-
-// Пример использования:
-const postData = {
-    id: '123',
-    user: 'John Doe',
-    question: 'What is the meaning of life?',
-    answer: '42'
-};
-sendPostRequest(postData);
-
-
-
-async function sendGetRequest(params) {
-    const url = 'https://script.google.com/macros/s/AKfycbw-2N7QOqWid_8UOv3qZIxLwYDPnrqy-YgPk82z648Zv-ZKSI57hzmd58WGslQ3hOOipw/exec';
-
-    try {
-        const response = await fetch(`${url}?${new URLSearchParams(params)}`, {
-            method: 'GET'
-        });
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const result = await response.json();
-        console.log('Response:', result);
-        return result;
-    } catch (error) {
-        console.error('Error:', error);
-    }
-}
-
-// Пример использования для получения строки по ID:
-const getParamsById = { id: '123' };
-sendGetRequest(getParamsById).then(data => {
-    console.log('Data by ID:', data);
+document.getElementById('sendForm').addEventListener('submit', async function (event) {
+  event.preventDefault();
+  const params = {
+    id: document.getElementById('sendId').value,
+    user: document.getElementById('sendUser').value,
+    question: document.getElementById('sendQuestion').value,
+    answer: document.getElementById('sendAnswer').value
+  };
+  try {
+    const response = await fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(params)
+    });
+    const result = await response.json();
+    document.getElementById('sendResults').innerText = JSON.stringify(result);
+  } catch (error) {
+    console.error('Error:', error);
+    document.getElementById('sendResults').innerText = 'Ошибка отправки данных';
+  }
 });
 
-// Пример использования для получения всех строк для определенного пользователя:
-const getParamsByUser = { user: 'John Doe' };
-sendGetRequest(getParamsByUser).then(data => {
-    console.log('Data by User:', data);
+document.getElementById('getForm').addEventListener('submit', async function (event) {
+  event.preventDefault();
+  const params = {};
+  const id = document.getElementById('getId').value;
+  const user = document.getElementById('getUser').value;
+
+  if (id) {
+    params.id = id;
+  } else if (user) {
+    params.user = user;
+  }
+
+  if (!params.id && !params.user) {
+    document.getElementById('getResults').innerText = 'Пожалуйста, введите ID или User';
+    return;
+  }
+
+  try {
+    const response = await fetch(`${apiUrl}?${new URLSearchParams(params)}`, {
+      method: 'GET'
+    });
+    const result = await response.json();
+    document.getElementById('getResults').innerText = JSON.stringify(result);
+  } catch (error) {
+    console.error('Error:', error);
+    document.getElementById('getResults').innerText = 'Ошибка получения данных';
+  }
 });
 
-
-// Пример использования:
-const getParams = {
-    id: '123',
-    user: 'John Doe',
-    question: 'What is the meaning of life?',
-    answer: '42'
-};
-sendGetRequest(getParams);
-
-
-
-async function fetchAllData() {
-    const url = 'https://script.google.com/macros/s/AKfycbw-2N7QOqWid_8UOv3qZIxLwYDPnrqy-YgPk82z648Zv-ZKSI57hzmd58WGslQ3hOOipw/exec';
-
-    try {
-        const response = await fetch(url, {
-            method: 'GET'
-        });
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const result = await response.json();
-        console.log('All Data:', result);
-        return result;
-    } catch (error) {
-        console.error('Error:', error);
-    }
-}
-
-// Пример использования:
-fetchAllData().then(data => {
-    // Вы можете использовать данные здесь
-    console.log(data);
+document.getElementById('getAllBtn').addEventListener('click', async function () {
+  try {
+    const response = await fetch(apiUrl, {
+      method: 'GET'
+    });
+    const result = await response.json();
+    document.getElementById('getAllResults').innerText = JSON.stringify(result);
+  } catch (error) {
+    console.error('Error:', error);
+    document.getElementById('getAllResults').innerText = 'Ошибка получения данных';
+  }
 });
